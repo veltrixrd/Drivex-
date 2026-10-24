@@ -7,6 +7,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Ordenar estructura
+        run: |
+          mkdir -p app/src/main/java/com/drivex/app app/src/main/res/xml app/src/main/res/values
+          mv build.gradle.kts app/build.gradle.kts
+          mv AndroidManifest.xml app/src/main/
+          mv DrivexService.kt MainActivity.kt Prefs.kt app/src/main/java/com/drivex/app/
+          mv accessibility_service_config.xml app/src/main/res/xml/
+          cat > build.gradle.kts <<'EOF'
+          plugins {
+              id("com.android.application") version "8.5.2" apply false
+              id("org.jetbrains.kotlin.android") version "1.9.24" apply false
+          }
+          EOF
+          cat > app/src/main/res/values/strings.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="service_description">DRIVEX lee en pantalla las solicitudes de inDrive para avisarte cuando cumplan tus filtros. No toca ni acepta nada por ti.</string>
+          </resources>
+          EOF
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
